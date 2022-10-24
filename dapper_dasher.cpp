@@ -11,6 +11,16 @@ int main()
     //accelaration due to gravity (pixels/second)/second
     const int gravity{1'200};
 
+    //hazard variables
+    Texture2D hazard = LoadTexture("textures/12_nebula_spritesheet.png");
+    Rectangle hazardRec{0.0, 0.0, hazard.width/8, hazard.height/8};
+    Vector2 hazardPos{Window_width, Window_height - hazardRec.height};
+
+    //hazard velocity on x in pixel/s
+    int hazardVel{-600};
+
+
+    //scarfy variables
     Texture2D scarfy = LoadTexture("textures/scarfy.png");
     Rectangle scarfyRec;
     scarfyRec.width = scarfy.width/6;
@@ -47,13 +57,13 @@ int main()
         //apply gravity while doing ground check
         if(scarfyPos.y >= Window_height - scarfyRec.height)
         {   
-            //here rectangle is on ground
+            //here scarfy is on ground
             velocity = 0;
             isInAir = false;
         }
         else
         {
-            //here rectangle is in air
+            //here scarfy is in air
             velocity += gravity * dT;
             isInAir = true;
         }
@@ -63,7 +73,10 @@ int main()
             velocity += jumpVal;
         }
 
-        //Update Y per frame
+        //Update Scarfy
+        hazardPos.x += hazardVel * dT;
+
+        //Update Scarfy Y per frame
         scarfyPos.y += velocity * dT;
 
          //updating running time 
@@ -80,6 +93,9 @@ int main()
             }
         }
 
+        //Draw Hazard
+        DrawTextureRec(hazard, hazardRec, hazardPos, WHITE);
+        //Draw Scarfy
         DrawTextureRec(scarfy, scarfyRec,scarfyPos, WHITE);
     
         EndDrawing();
@@ -87,6 +103,7 @@ int main()
     }
     
     UnloadTexture(scarfy);
+    UnloadTexture(hazard);
     CloseWindow();
 
 }
